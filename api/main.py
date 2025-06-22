@@ -15,7 +15,7 @@ DEFAULT_USER_ID = os.getenv("USER_ID")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # --- Flask App Initialization ---
-app = Flask(__name__, static_folder='microsoft_login/build')
+app = Flask(__name__)
 CORS(app)
 
 
