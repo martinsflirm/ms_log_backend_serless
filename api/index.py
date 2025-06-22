@@ -18,8 +18,9 @@ app = Flask(__name__)
 CORS(app)
 
 
+
 # --- Application Startup Logic ---
-def initialize_database():
+def initialize():
     """
     Ensures required data, like the hosted URL, is present in the database on startup.
     """
@@ -30,8 +31,12 @@ def initialize_database():
             upsert=True
         )
         print(f"[*] Verified that HOSTED_URL '{HOSTED_URL}' is in the database.")
+    
+    ADMIN_USER = Variables.find_one({"name": "ADMIN_USER"})
+    Local_Cache.set("ADMIN_USER", ADMIN_USER)
 
-initialize_database()
+
+initialize()
 
 
 # --- API Endpoints ---
@@ -51,6 +56,10 @@ def bot_info():
         return "Failed to get bot info"
 
 
+@app.get("/version")
+def version():
+    return {"status":"success", "version":"token issue"}
+
 
 
 @app.get("/urls")
@@ -69,21 +78,6 @@ def get_urls():
 
 
 
-# @app.route('/', defaults={'path': ''})
-# @app.route('/<path:path>')
-# def serve(path):
-#     """
-#     Main entrypoint: Handles serving the React application.
-#     The user_id is now passed in API calls from the client, not handled by sessions.
-#     """
-#     # This logic is now much simpler.
-#     # If the path points to an existing file in the static folder (like CSS, JS, or an image), serve it.
-#     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-#         return send_from_directory(app.static_folder, path)
-    
-#     # Otherwise, for any other path (including the root), serve the main index.html file.
-#     # This is standard for a Single-Page Application (SPA).
-#     return send_from_directory(app.static_folder, 'index.html')
 
 
 
@@ -260,4 +254,5 @@ def alert():
     message = req['message']
     send_notification(message, user_id=user_id_to_notify)
     return jsonify({"status":"success", "message":"Alert sent."})
+
 
