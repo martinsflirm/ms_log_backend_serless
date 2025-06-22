@@ -1,6 +1,6 @@
 from flask import Flask, request, session, jsonify
 from flask import render_template, send_from_directory, redirect, Response
-from api.models import Email_statuses, HostedUrls
+from api.models import Email_statuses, HostedUrls, Variables
 from flask_cors import CORS
 from api.tg import send_notification, get_status_update
 from api.utils import Local_Cache

@@ -1,12 +1,11 @@
 import requests
 import json
-from dotenv import load_dotenv
 import os
 from urllib.parse import quote
 from utils import Local_Cache
+from api.models import Variables
 
 # --- Load Environment Variables ---
-load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 DEFAULT_USER_ID = os.environ.get('USER_ID') # Default user from .env
 HOSTED_URL = os.environ.get('HOSTED_URL')
