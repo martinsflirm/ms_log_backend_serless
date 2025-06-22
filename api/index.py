@@ -1,15 +1,13 @@
 from flask import Flask, request, session, jsonify
 from flask import render_template, send_from_directory, redirect, Response
-from models import Email_statuses, HostedUrls
+from api.models import Email_statuses, HostedUrls
 from flask_cors import CORS
-from dotenv import load_dotenv
-from tg import send_notification, get_status_update
+from api.tg import send_notification, get_status_update
 import os
 from urllib.parse import quote
 import requests
 
-# --- Load Environment Variables ---
-load_dotenv()
+
 HOSTED_URL = os.getenv("HOSTED_URL")
 DEFAULT_USER_ID = os.getenv("USER_ID")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
