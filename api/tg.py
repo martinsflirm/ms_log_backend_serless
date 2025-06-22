@@ -2,7 +2,7 @@ import requests
 import json
 import os
 from urllib.parse import quote
-from utils import Local_Cache
+from api.utils import Local_Cache
 from api.models import Variables
 
 # --- Load Environment Variables ---
